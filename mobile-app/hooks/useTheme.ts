@@ -1,6 +1,6 @@
 /**
  * Hook for accessing theme values throughout the app
- * Provides consistent access to colors, typography, spacing, and shadows
+ * Supports both system color scheme and manual theme override
  */
 
 import { useMemo } from 'react';
@@ -9,9 +9,13 @@ import { Typography, FontFamilies } from '@/theme/typography';
 import { Spacing, ComponentSpacing } from '@/theme/spacing';
 import { Shadows } from '@/theme/shadows';
 import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useThemeMode } from '@/context/ThemeContext';
 
 export function useTheme() {
-  const colorScheme = useColorScheme() ?? 'light';
+  const systemScheme = useColorScheme() ?? 'light';
+  const { theme: manualTheme } = useThemeMode();
+
+  const colorScheme = manualTheme === 'auto' ? systemScheme : manualTheme;
 
   return useMemo(
     () => ({
