@@ -109,6 +109,7 @@ const ShoppingList = ({ items }: { items: ShoppingItem[] }) => {
                   styles.row,
                   {
                     backgroundColor: statusStyle.backgroundColor,
+                    borderColor: statusStyle.borderColor,
                   },
                 ]}
                 activeOpacity={0.7}
@@ -205,6 +206,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     marginBottom: 10,
     borderRadius: 12,
+    borderWidth: 1.5,
   },
   iconStatusGroup: {
     flexDirection: 'row',
