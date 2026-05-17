@@ -1,112 +1,124 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
-
-import { ExternalLink } from '@/components/external-link';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
+import { StyleSheet, ScrollView } from 'react-native';
+import { useTheme } from '@/hooks/useTheme';
+import { useThemeMode } from '@/context/ThemeContext';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Collapsible } from '@/components/ui/collapsible';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Fonts } from '@/constants/theme';
+import { ThemedButton } from '@/components/themed-button';
+import { ThemedCard } from '@/components/themed-card';
 
-export default function TabTwoScreen() {
+export default function SettingsScreen() {
+  const theme = useTheme();
+  const { theme: currentTheme, toggleTheme, setTheme } = useThemeMode();
+
+  const getThemeLabel = () => {
+    if (currentTheme === 'auto') return 'System';
+    return currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1);
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText
-          type="title"
-          style={{
-            fontFamily: Fonts.rounded,
-          }}>
-          Shopping
+    <ScrollView
+      style={[
+        styles.container,
+        { backgroundColor: theme.colors.background },
+      ]}
+      contentContainerStyle={styles.contentContainer}
+    >
+      <ThemedView style={styles.section}>
+        <ThemedText variant="headlineLarge" style={styles.title}>
+          Settings
         </ThemedText>
       </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
+
+      <ThemedCard style={styles.card}>
+        <ThemedText variant="titleMedium" style={styles.sectionTitle}>
+          Theme Settings
         </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
+        <ThemedText variant="bodyMedium" style={styles.description}>
+          Current Theme: {getThemeLabel()}
         </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
+
+        <ThemedView style={styles.buttonGroup}>
+          <ThemedButton
+            variant={currentTheme === 'light' ? 'primary' : 'outline'}
+            size="md"
+            onPress={() => setTheme('light')}
+            style={styles.button}
+          >
+            Light
+          </ThemedButton>
+          <ThemedButton
+            variant={currentTheme === 'dark' ? 'primary' : 'outline'}
+            size="md"
+            onPress={() => setTheme('dark')}
+            style={styles.button}
+          >
+            Dark
+          </ThemedButton>
+          <ThemedButton
+            variant={currentTheme === 'auto' ? 'primary' : 'outline'}
+            size="md"
+            onPress={() => setTheme('auto')}
+            style={styles.button}
+          >
+            Auto
+          </ThemedButton>
+        </ThemedView>
+
+        <ThemedButton
+          variant="secondary"
+          size="lg"
+          onPress={toggleTheme}
+          style={styles.toggleButton}
+        >
+          Toggle Theme
+        </ThemedButton>
+      </ThemedCard>
+
+      <ThemedCard style={styles.card}>
+        <ThemedText variant="titleMedium" style={styles.sectionTitle}>
+          About
         </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
+        <ThemedText variant="bodySmall" style={styles.description}>
+          RestauPlay v1.0.0
         </ThemedText>
-        <Image
-          source={require('@/assets/images/react-logo.png')}
-          style={{ width: 100, height: 100, alignSelf: 'center' }}
-        />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful{' '}
-          <ThemedText type="defaultSemiBold" style={{ fontFamily: Fonts.mono }}>
-            react-native-reanimated
-          </ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+      </ThemedCard>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
+  container: {
+    flex: 1,
   },
-  titleContainer: {
+  contentContainer: {
+    padding: 16,
+    gap: 16,
+  },
+  section: {
+    marginBottom: 8,
+  },
+  title: {
+    marginBottom: 8,
+  },
+  card: {
+    marginBottom: 8,
+  },
+  sectionTitle: {
+    marginBottom: 12,
+  },
+  description: {
+    marginBottom: 16,
+  },
+  buttonGroup: {
     flexDirection: 'row',
     gap: 8,
+    marginBottom: 16,
+    justifyContent: 'space-between',
+  },
+  button: {
+    flex: 1,
+  },
+  toggleButton: {
+    marginTop: 8,
   },
 });
