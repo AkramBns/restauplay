@@ -3,31 +3,21 @@
  * Supports both system color scheme and manual theme override
  */
 
-import { useMemo } from 'react';
+import { useMemo, useContext } from 'react';
 import { ColorPalette, type Theme as ThemeMode } from '@/theme/colors';
 import { Typography, FontFamilies } from '@/theme/typography';
 import { Spacing, ComponentSpacing } from '@/theme/spacing';
 import { Shadows } from '@/theme/shadows';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-
-try {
-  var { useThemeMode } = require('@/context/ThemeContext');
-} catch {
-  var useThemeMode = undefined;
-}
+import { ThemeContext } from '@/context/ThemeContext';
 
 export function useTheme() {
   const systemScheme = useColorScheme() ?? 'light';
-  
+  const themeContext = useContext(ThemeContext);
+
   let colorScheme = systemScheme;
-  try {
-    if (useThemeMode) {
-      const { theme: manualTheme } = useThemeMode();
-      colorScheme = manualTheme === 'auto' ? systemScheme : manualTheme;
-    }
-  } catch {
-    // If context not available, use system scheme
-    colorScheme = systemScheme;
+  if (themeContext?.theme !== 'auto') {
+    colorScheme = themeContext?.theme ?? systemScheme;
   }
 
   return useMemo(
