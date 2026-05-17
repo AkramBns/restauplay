@@ -1,107 +1,179 @@
 import { LegendList } from "@legendapp/list";
-import { Link } from 'expo-router';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
-import { GlobalStyles } from '@/constants/theme';
-
+import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import { ThemedButton } from '@/components/themed-button';
 import { ShoppingItem } from '@/types/types';
-const ShoppingList = ({ items }: { items: ShoppingItem[] }) => {
+import { Link } from 'expo-router';
+import { useTheme } from '@/hooks/useTheme';
 
-  const getRowStyle = (state: string) => {
+const ShoppingList = ({ items }: { items: ShoppingItem[] }) => {
+  const theme = useTheme();
+
+  const getStatusStyle = (state: string) => {
     switch (state) {
       case 'completed':
-        return { bg: '#f0fdf4', accent: '#22c55e', badge: '#dcfce7', badgeText: '#15803d' };
+        return {
+          backgroundColor: theme.colors.successLight,
+          borderLeftColor: theme.colors.success,
+          statusColor: theme.colors.success,
+          textColor: theme.colors.text,
+        };
       case 'pending':
-        return { bg: '#fffbeb', accent: '#f59e0b', badge: '#fef3c7', badgeText: '#92400e' };
+        return {
+          backgroundColor: theme.colors.warningLight,
+          borderLeftColor: theme.colors.warning,
+          statusColor: theme.colors.warning,
+          textColor: theme.colors.text,
+        };
       case 'Credit':
-        return { bg: '#eff6ff', accent: '#3b82f6', badge: '#dbeafe', badgeText: '#1e40af' };
+        return {
+          backgroundColor: theme.colors.infoLight,
+          borderLeftColor: theme.colors.info,
+          statusColor: theme.colors.info,
+          textColor: theme.colors.text,
+        };
       default:
-        return { bg: '#ffffff', accent: '#e5e7eb', badge: '#f3f4f6', badgeText: '#374151' };
+        return {
+          backgroundColor: theme.colors.backgroundSecondary,
+          borderLeftColor: theme.colors.border,
+          statusColor: theme.colors.textSecondary,
+          textColor: theme.colors.text,
+        };
     }
   };
 
   const getStatusIcon = (state: string) => {
     switch (state) {
-      case 'completed': return '✅';
-      case 'pending':   return '🕒';
-      case 'Credit':    return '💵';
-      default:          return '❓';
+      case 'completed':
+        return { name: 'checkmark-circle' as const, size: 24 };
+      case 'pending':
+        return { name: 'time' as const, size: 24 };
+      case 'Credit':
+        return { name: 'card' as const, size: 24 };
+      default:
+        return { name: 'help-circle' as const, size: 24 };
     }
   };
 
-  const renderItem = ({ item }: { item: ShoppingItem }) => {
-    const rowStyle = getRowStyle(item.state);
-    return (
-      <Link
-        href={{
-          pathname: "/modal",
-          params: {
-            id: item.id,
-            name: item.name,
-            description: item.description,
-            state: item.state,
-          },
-        }}
-        asChild
-      >
-        <TouchableOpacity activeOpacity={0.7}>
-          <View style={[styles.card, { backgroundColor: rowStyle.bg, borderLeftColor: rowStyle.accent }]}>
-            <View style={styles.cardContent}>
-              {/* Icon */}
-              <View style={[styles.iconCircle, { backgroundColor: rowStyle.badge }]}>
-                <Text style={styles.iconText}>{getStatusIcon(item.state)}</Text>
-              </View>
-
-              {/* Text */}
-              <View style={styles.textBlock}>
-                <Text style={styles.itemName} numberOfLines={1}>{item.name}</Text>
-                {item.description ? (
-                  <Text style={styles.itemDescription} numberOfLines={2}>{item.description}</Text>
-                ) : null}
-              </View>
-
-              {/* Right side: quantity + badge */}
-              <View style={styles.rightBlock}>
-                {(item.quantity || item.unit) ? (
-                  <Text style={styles.quantity}>
-                    {item.quantity} {item.unit}
-                  </Text>
-                ) : null}
-                <View style={[styles.badge, { backgroundColor: rowStyle.badge }]}>
-                  <Text style={[styles.badgeText, { color: rowStyle.badgeText }]}>{item.state}</Text>
-                </View>
-              </View>
-            </View>
-          </View>
-        </TouchableOpacity>
-      </Link>
-    );
+  const getStatusLabel = (state: string) => {
+    switch (state) {
+      case 'completed':
+        return 'Completed';
+      case 'pending':
+        return 'Pending';
+      case 'Credit':
+        return 'Credit';
+      default:
+        return 'Unknown';
+    }
   };
 
   return (
-    <ThemedView style={GlobalStyles.light}> 
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Shopping List</Text>
-        <Text style={styles.headerCount}>{items.length} items</Text>
-      </View>
-
-      {/* Add Button */}
+    <ThemedView style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <Link href="/modal" asChild>
-        <TouchableOpacity style={styles.addButton} activeOpacity={0.85}>
-          <Text style={styles.addButtonText}>＋  Add New Item</Text>
+        <TouchableOpacity style={styles.addButtonWrapper}>
+          <ThemedButton variant="primary" size="lg" style={styles.addButton}>
+            <Ionicons name="add-circle" size={20} color="#fff" style={styles.addButtonIcon} />
+            Add New Item
+          </ThemedButton>
         </TouchableOpacity>
       </Link>
 
-      {/* List */}
       <LegendList
-        style={styles.list}
+        style={{ flex: 1 }}
         data={items}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={renderItem}
-        contentContainerStyle={{ paddingBottom: 24 }}
+        renderItem={({ item }) => {
+          const statusStyle = getStatusStyle(item.state);
+          const statusIcon = getStatusIcon(item.state);
+
+          return (
+            <Link
+              href={{
+                pathname: "/modal",
+                params: {
+                  id: item.id,
+                  name: item.name,
+                  description: item.description,
+                  state: item.state,
+                },
+              }}
+              asChild
+            >
+              <TouchableOpacity
+                style={[
+                  styles.row,
+                  {
+                    backgroundColor: statusStyle.backgroundColor,
+                    borderLeftColor: statusStyle.borderLeftColor,
+                  },
+                ]}
+                activeOpacity={0.7}
+              >
+                {/* Status Icon */}
+                <View style={styles.iconContainer}>
+                  <Ionicons
+                    name={statusIcon.name}
+                    size={statusIcon.size}
+                    color={statusStyle.statusColor}
+                  />
+                </View>
+
+                {/* Text Container */}
+                <View style={styles.textContainer}>
+                  <ThemedText
+                    variant="titleMedium"
+                    style={[
+                      styles.name,
+                      { color: statusStyle.textColor },
+                    ]}
+                  >
+                    {item.name}
+                  </ThemedText>
+                  <ThemedText
+                    variant="bodySmall"
+                    style={[
+                      styles.description,
+                      { color: statusStyle.textColor },
+                    ]}
+                  >
+                    {item.quantity} {item.unit}
+                  </ThemedText>
+                  {item.description && (
+                    <ThemedText
+                      variant="labelSmall"
+                      style={[
+                        styles.note,
+                        { color: statusStyle.textColor },
+                      ]}
+                    >
+                      {item.description}
+                    </ThemedText>
+                  )}
+                </View>
+
+                {/* Status Badge */}
+                <View
+                  style={[
+                    styles.statusBadge,
+                    { backgroundColor: statusStyle.statusColor },
+                  ]}
+                >
+                  <ThemedText
+                    variant="labelSmall"
+                    style={styles.statusBadgeText}
+                  >
+                    {getStatusLabel(item.state)}
+                  </ThemedText>
+                </View>
+              </TouchableOpacity>
+            </Link>
+          );
+        }}
       />
     </ThemedView>
   );
@@ -111,110 +183,56 @@ export default ShoppingList;
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
-    height: '100%',
     flex: 1,
-    backgroundColor: '#eaecec',
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 8,
-    paddingBottom: 12,
-  },
-  headerTitle: {
-    fontSize: 22,
-    fontWeight: '700',
-    color: '#111827',
-  },
-  headerCount: {
-    fontSize: 14,
-    color: '#6b7280',
-    fontWeight: '500',
+  addButtonWrapper: {
+    padding: 12,
   },
   addButton: {
-    backgroundColor: '#16a34a',
-    marginHorizontal: 16,
-    marginBottom: 16,
-    paddingVertical: 14,
-    borderRadius: 14,
+    justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#16a34a',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    elevation: 4,
+    flexDirection: 'row',
   },
-  addButtonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '600',
-    letterSpacing: 0.3,
+  addButtonIcon: {
+    marginRight: 8,
   },
-  list: {
-    flex: 1,
-    paddingHorizontal: 16,
-  },
-  card: {
-    borderRadius: 14,
-    marginBottom: 10,
-    borderLeftWidth: 4,
-    backgroundColor: '#ffffff',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.06,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  cardContent: {
+  row: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 14,
-    gap: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    marginHorizontal: 12,
+    marginVertical: 6,
+    borderRadius: 12,
+    borderLeftWidth: 4,
   },
-  iconCircle: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
-    alignItems: 'center',
+  iconContainer: {
+    marginRight: 12,
+    width: 28,
     justifyContent: 'center',
   },
-  iconText: {
-    fontSize: 20,
-  },
-  textBlock: {
+  textContainer: {
     flex: 1,
-    gap: 3,
+    gap: 4,
   },
-  itemName: {
-    fontSize: 15,
+  name: {
     fontWeight: '600',
-    color: '#111827',
   },
-  itemDescription: {
-    fontSize: 13,
-    color: '#6b7280',
-    lineHeight: 18,
+  description: {
+    marginTop: 2,
   },
-  rightBlock: {
-    alignItems: 'flex-end',
-    gap: 6,
+  note: {
+    marginTop: 4,
+    opacity: 0.7,
   },
-  quantity: {
-    fontSize: 14,
+  statusBadge: {
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 12,
+    marginLeft: 8,
+  },
+  statusBadgeText: {
+    color: '#fff',
     fontWeight: '600',
-    color: '#374151',
-  },
-  badge: {
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 20,
-  },
-  badgeText: {
-    fontSize: 11,
-    fontWeight: '600',
-    textTransform: 'capitalize',
   },
 });
