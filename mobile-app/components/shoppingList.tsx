@@ -18,28 +18,28 @@ const ShoppingList = ({ items }: { items: ShoppingItem[] }) => {
       case 'completed':
         return {
           backgroundColor: theme.colors.successLight,
-          borderLeftColor: theme.colors.success,
+          borderColor: theme.colors.success,
           statusColor: theme.colors.success,
           textColor: theme.colors.text,
         };
       case 'pending':
         return {
           backgroundColor: theme.colors.warningLight,
-          borderLeftColor: theme.colors.warning,
+          borderColor: theme.colors.warning,
           statusColor: theme.colors.warning,
           textColor: theme.colors.text,
         };
       case 'Credit':
         return {
           backgroundColor: theme.colors.infoLight,
-          borderLeftColor: theme.colors.info,
+          borderColor: theme.colors.info,
           statusColor: theme.colors.info,
           textColor: theme.colors.text,
         };
       default:
         return {
           backgroundColor: theme.colors.backgroundSecondary,
-          borderLeftColor: theme.colors.border,
+          borderColor: theme.colors.border,
           statusColor: theme.colors.textSecondary,
           textColor: theme.colors.text,
         };
@@ -62,13 +62,13 @@ const ShoppingList = ({ items }: { items: ShoppingItem[] }) => {
   const getStatusLabel = (state: string) => {
     switch (state) {
       case 'completed':
-        return 'Completed';
+        return 'Done';
       case 'pending':
         return 'Pending';
       case 'Credit':
         return 'Credit';
       default:
-        return 'Unknown';
+        return '?';
     }
   };
 
@@ -84,7 +84,7 @@ const ShoppingList = ({ items }: { items: ShoppingItem[] }) => {
       </Link>
 
       <LegendList
-        style={{ flex: 1 }}
+        style={styles.listContainer}
         data={items}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => {
@@ -109,22 +109,34 @@ const ShoppingList = ({ items }: { items: ShoppingItem[] }) => {
                   styles.row,
                   {
                     backgroundColor: statusStyle.backgroundColor,
-                    borderLeftColor: statusStyle.borderLeftColor,
                   },
                 ]}
                 activeOpacity={0.7}
               >
-                {/* Status Icon */}
-                <View style={styles.iconContainer}>
+                {/* Icon + Status Badge Group */}
+                <View style={styles.iconStatusGroup}>
                   <Ionicons
                     name={statusIcon.name}
-                    size={statusIcon.size}
+                    size={24}
                     color={statusStyle.statusColor}
                   />
+                  <View
+                    style={[
+                      styles.statusBadge,
+                      { backgroundColor: statusStyle.statusColor },
+                    ]}
+                  >
+                    <ThemedText
+                      variant="labelSmall"
+                      style={styles.statusBadgeText}
+                    >
+                      {getStatusLabel(item.state)}
+                    </ThemedText>
+                  </View>
                 </View>
 
                 {/* Text Container */}
-                <View style={styles.textContainer}>
+                <View style={[styles.textContainer, { flex: 1 }]}>
                   <ThemedText
                     variant="titleMedium"
                     style={[
@@ -155,21 +167,6 @@ const ShoppingList = ({ items }: { items: ShoppingItem[] }) => {
                     </ThemedText>
                   )}
                 </View>
-
-                {/* Status Badge */}
-                <View
-                  style={[
-                    styles.statusBadge,
-                    { backgroundColor: statusStyle.statusColor },
-                  ]}
-                >
-                  <ThemedText
-                    variant="labelSmall"
-                    style={styles.statusBadgeText}
-                  >
-                    {getStatusLabel(item.state)}
-                  </ThemedText>
-                </View>
               </TouchableOpacity>
             </Link>
           );
@@ -186,7 +183,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   addButtonWrapper: {
-    padding: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
   },
   addButton: {
     justifyContent: 'center',
@@ -196,23 +194,25 @@ const styles = StyleSheet.create({
   addButtonIcon: {
     marginRight: 8,
   },
+  listContainer: {
+    flex: 1,
+    paddingHorizontal: 16,
+  },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 14,
-    paddingHorizontal: 16,
-    marginHorizontal: 12,
-    marginVertical: 6,
+    paddingHorizontal: 14,
+    marginBottom: 10,
     borderRadius: 12,
-    borderLeftWidth: 4,
   },
-  iconContainer: {
+  iconStatusGroup: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginRight: 12,
-    width: 28,
-    justifyContent: 'center',
+    gap: 6,
   },
   textContainer: {
-    flex: 1,
     gap: 4,
   },
   name: {
@@ -226,10 +226,12 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   statusBadge: {
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 12,
-    marginLeft: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 8,
+    minWidth: 42,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   statusBadgeText: {
     color: '#fff',
