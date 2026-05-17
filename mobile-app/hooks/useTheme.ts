@@ -9,13 +9,26 @@ import { Typography, FontFamilies } from '@/theme/typography';
 import { Spacing, ComponentSpacing } from '@/theme/spacing';
 import { Shadows } from '@/theme/shadows';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { useThemeMode } from '@/context/ThemeContext';
+
+try {
+  var { useThemeMode } = require('@/context/ThemeContext');
+} catch {
+  var useThemeMode = undefined;
+}
 
 export function useTheme() {
   const systemScheme = useColorScheme() ?? 'light';
-  const { theme: manualTheme } = useThemeMode();
-
-  const colorScheme = manualTheme === 'auto' ? systemScheme : manualTheme;
+  
+  let colorScheme = systemScheme;
+  try {
+    if (useThemeMode) {
+      const { theme: manualTheme } = useThemeMode();
+      colorScheme = manualTheme === 'auto' ? systemScheme : manualTheme;
+    }
+  } catch {
+    // If context not available, use system scheme
+    colorScheme = systemScheme;
+  }
 
   return useMemo(
     () => ({
