@@ -3,7 +3,7 @@
  * Allows users to override system color scheme preference
  */
 
-import React, { createContext, useState, useCallback } from 'react';
+import React, { createContext, useState, useCallback, useContext } from 'react';
 import type { Theme } from '@/theme/colors';
 
 export interface ThemeContextType {
@@ -12,7 +12,13 @@ export interface ThemeContextType {
   toggleTheme: () => void;
 }
 
-export const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+const defaultContextValue: ThemeContextType = {
+  theme: 'auto',
+  setTheme: () => {},
+  toggleTheme: () => {},
+};
+
+export const ThemeContext = createContext<ThemeContextType>(defaultContextValue);
 
 export interface ThemeProviderProps {
   children: React.ReactNode;
@@ -38,9 +44,6 @@ export function ThemeProvider({ children, defaultTheme = 'auto' }: ThemeProvider
 }
 
 export function useThemeMode() {
-  const context = React.useContext(ThemeContext);
-  if (!context) {
-    throw new Error('useThemeMode must be used within ThemeProvider');
-  }
+  const context = useContext(ThemeContext);
   return context;
 }
