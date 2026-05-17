@@ -2,18 +2,25 @@ import * as SecureStore from 'expo-secure-store';
 
 const ACCESS_TOKEN_KEY = 'accessToken';
 const REFRESH_TOKEN_KEY = 'refreshToken';
+const EMPLOYEE_ID_KEY = 'employeeId';
 
 export const saveTokens = async (accessToken: string, refreshToken?: string) => {
   await SecureStore.setItemAsync(ACCESS_TOKEN_KEY, accessToken);
   if (refreshToken) await SecureStore.setItemAsync(REFRESH_TOKEN_KEY, refreshToken);
 };
 
+export const saveEmployeeId = async (employeeId: string) => {
+  await SecureStore.setItemAsync(EMPLOYEE_ID_KEY, employeeId);
+};
+
 export const getAccessToken = async () => SecureStore.getItemAsync(ACCESS_TOKEN_KEY);
 export const getRefreshToken = async () => SecureStore.getItemAsync(REFRESH_TOKEN_KEY);
+export const getEmployeeId = async () => SecureStore.getItemAsync(EMPLOYEE_ID_KEY);
 
 export const clearTokens = async () => {
   await SecureStore.deleteItemAsync(ACCESS_TOKEN_KEY);
   await SecureStore.deleteItemAsync(REFRESH_TOKEN_KEY);
+  await SecureStore.deleteItemAsync(EMPLOYEE_ID_KEY);
 };
 
 // Attempts to refresh the access token using the refresh token.

@@ -125,7 +125,7 @@ export default function ProfileScreen() {
           { backgroundColor: Colors[colorScheme ?? 'light'].tint }
         ]}
         onPress={handleLogout}>
-        <ThemedText style={styles.logoutButtonText}>Logout</ThemedText>
+        <ThemedText  type="title"  style={styles.logoutButtonText}>Logout</ThemedText>
       </Pressable>
     </ParallaxScrollView>
   );

@@ -1,78 +1,108 @@
 import { LegendList } from "@legendapp/list";
+import { Link } from 'expo-router';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import { ThemedText } from '@/components/themed-text';
+import { GlobalStyles } from '@/constants/theme';
+
 import { ThemedView } from '@/components/themed-view';
 import { ShoppingItem } from '@/types/types';
-import { Link } from 'expo-router';
-
-
 const ShoppingList = ({ items }: { items: ShoppingItem[] }) => {
-const getRowBackground = (state: string) => {
-  switch (state) {
-    case 'completed':
-      return '#abf1ab';
-    case 'pending':
-      return '#fff8e1';
-    default:
-      return '#ffffff';
-  }
-};
-    const getStatusIcon = (state: string) => {
-  switch (state) {
-    case 'completed':
-      return '✅';
-    case 'pending':
-      return '🕒';
-     case  'Credit':
-      return '💵'
-    default:
-      return '❓';
-  }
-};
 
-  return (
-    <ThemedView style={{ flex: 1 }}>
-      <Link href="/modal" asChild>
-        <TouchableOpacity style={styles.addButton}>
-          <ThemedText style={styles.addButtonText}>+ Add New Item</ThemedText>
+  const getRowStyle = (state: string) => {
+    switch (state) {
+      case 'completed':
+        return { bg: '#f0fdf4', accent: '#22c55e', badge: '#dcfce7', badgeText: '#15803d' };
+      case 'pending':
+        return { bg: '#fffbeb', accent: '#f59e0b', badge: '#fef3c7', badgeText: '#92400e' };
+      case 'Credit':
+        return { bg: '#eff6ff', accent: '#3b82f6', badge: '#dbeafe', badgeText: '#1e40af' };
+      default:
+        return { bg: '#ffffff', accent: '#e5e7eb', badge: '#f3f4f6', badgeText: '#374151' };
+    }
+  };
+
+  const getStatusIcon = (state: string) => {
+    switch (state) {
+      case 'completed': return '✅';
+      case 'pending':   return '🕒';
+      case 'Credit':    return '💵';
+      default:          return '❓';
+    }
+  };
+
+  const renderItem = ({ item }: { item: ShoppingItem }) => {
+    const rowStyle = getRowStyle(item.state);
+    return (
+      <Link
+        href={{
+          pathname: "/modal",
+          params: {
+            id: item.id,
+            name: item.name,
+            description: item.description,
+            state: item.state,
+          },
+        }}
+        asChild
+      >
+        <TouchableOpacity activeOpacity={0.7}>
+          <View style={[styles.card, { backgroundColor: rowStyle.bg, borderLeftColor: rowStyle.accent }]}>
+            <View style={styles.cardContent}>
+              {/* Icon */}
+              <View style={[styles.iconCircle, { backgroundColor: rowStyle.badge }]}>
+                <Text style={styles.iconText}>{getStatusIcon(item.state)}</Text>
+              </View>
+
+              {/* Text */}
+              <View style={styles.textBlock}>
+                <Text style={styles.itemName} numberOfLines={1}>{item.name}</Text>
+                {item.description ? (
+                  <Text style={styles.itemDescription} numberOfLines={2}>{item.description}</Text>
+                ) : null}
+              </View>
+
+              {/* Right side: quantity + badge */}
+              <View style={styles.rightBlock}>
+                {(item.quantity || item.unit) ? (
+                  <Text style={styles.quantity}>
+                    {item.quantity} {item.unit}
+                  </Text>
+                ) : null}
+                <View style={[styles.badge, { backgroundColor: rowStyle.badge }]}>
+                  <Text style={[styles.badgeText, { color: rowStyle.badgeText }]}>{item.state}</Text>
+                </View>
+              </View>
+            </View>
+          </View>
         </TouchableOpacity>
       </Link>
+    );
+  };
+
+  return (
+    <ThemedView style={GlobalStyles.light}> 
+      {/* Header */}
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>Shopping List</Text>
+        <Text style={styles.headerCount}>{items.length} items</Text>
+      </View>
+
+      {/* Add Button */}
+      <Link href="/modal" asChild>
+        <TouchableOpacity style={styles.addButton} activeOpacity={0.85}>
+          <Text style={styles.addButtonText}>＋  Add New Item</Text>
+        </TouchableOpacity>
+      </Link>
+
+      {/* List */}
       <LegendList
-       style={{ flex: 1 }}
+        style={styles.list}
         data={items}
         keyExtractor={(item) => item.id.toString()}
-      renderItem={({ item }) => (
-        <View style={[ styles.row,  { backgroundColor: getRowBackground(item.state) }  ]}>
-          {/* Left side: name + description */}
-          <ThemedView style={styles.stepContainer}>
-                  <Link
-                    href={{
-                      pathname: "/modal",
-                      params: {
-                        id: item.id,
-                        name: item.name,
-                        description: item.description,
-                        state: item.state,
-                      },
-                    }}
-                  >
-                    <Link.Trigger>
-                       <View style={ [styles.textContainer, { backgroundColor: getRowBackground(item.state) } ]}>
-                           <Text style={[ styles.name,{ backgroundColor: getRowBackground(item.state) }]}>{getStatusIcon(item.state)} {item.name} </Text>
-                        <Text style={[ styles.description,{ backgroundColor: getRowBackground(item.state) }]}>[ {item.state} ]  {item.description} {item.quantity} { item.unit}</Text>
-                    </View>
-
-                    </Link.Trigger>
-                    </Link>
-         </ThemedView>
-         
-
-          
-        </View>
-      )}
-    />
+        renderItem={renderItem}
+        contentContainerStyle={{ paddingBottom: 24 }}
+      />
     </ThemedView>
   );
 };
@@ -80,50 +110,111 @@ const getRowBackground = (state: string) => {
 export default ShoppingList;
 
 const styles = StyleSheet.create({
-  addButton: {
-    backgroundColor: '#4CAF50',
-    padding: 16,
-    margin: 8,
-    borderRadius: 12,
+  container: {
+    width: '100%',
+    height: '100%',
+    flex: 1,
+    backgroundColor: '#eaecec',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    paddingBottom: 12,
+  },
+  headerTitle: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#111827',
+  },
+  headerCount: {
+    fontSize: 14,
+    color: '#6b7280',
+    fontWeight: '500',
+  },
+  addButton: {
+    backgroundColor: '#16a34a',
+    marginHorizontal: 16,
+    marginBottom: 16,
+    paddingVertical: 14,
+    borderRadius: 14,
+    alignItems: 'center',
+    shadowColor: '#16a34a',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 8,
+    elevation: 4,
   },
   addButtonText: {
-    color: '#fff',
+    color: '#ffffff',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '600',
+    letterSpacing: 0.3,
   },
-  row: {
+  list: {
+    flex: 1,
+    paddingHorizontal: 16,
+  },
+  card: {
+    borderRadius: 14,
+    marginBottom: 10,
+    borderLeftWidth: 4,
+    backgroundColor: '#ffffff',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.06,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  cardContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#828080e1',
-     borderRadius: 12, 
-     marginBottom: 8,  
+    padding: 14,
+    gap: 12,
   },
-  textContainer: {
-    flex: 1,
+  iconCircle: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  name: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#000',
-  },
-  description: {
-    fontSize: 14,
-    color: '#413f3f',
-  },
-  description0: {
-    fontSize: 14,
-    color: '#666',
-    marginTop: 2,
-  },
-  statusIcon: {
+  iconText: {
     fontSize: 20,
-    marginLeft: 12,
-  }, stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  },
+  textBlock: {
+    flex: 1,
+    gap: 3,
+  },
+  itemName: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#111827',
+  },
+  itemDescription: {
+    fontSize: 13,
+    color: '#6b7280',
+    lineHeight: 18,
+  },
+  rightBlock: {
+    alignItems: 'flex-end',
+    gap: 6,
+  },
+  quantity: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#374151',
+  },
+  badge: {
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 20,
+  },
+  badgeText: {
+    fontSize: 11,
+    fontWeight: '600',
+    textTransform: 'capitalize',
   },
 });

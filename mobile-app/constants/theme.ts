@@ -27,6 +27,18 @@ export const Colors = {
   },
 };
 
+export const GlobalStyles = {
+  container: {
+    flex: 1,
+    padding: 16,
+  },
+  card: {
+    borderRadius: 8,
+    padding: 12,
+    marginVertical: 8,
+  },
+};
+
 export const Fonts = Platform.select({
   ios: {
     /** iOS `UIFontDescriptorSystemDesignDefault` */

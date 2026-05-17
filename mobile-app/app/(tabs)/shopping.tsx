@@ -66,7 +66,7 @@ export default function ShoppingScreen() {
         headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
         headerImage={
           <Image
-            source={require('@/assets/images/partial-react-logo.png')}
+            source={require('@/assets/images/logo_518.png')}
             style={styles.reactLogo}
           />
         }>
@@ -82,6 +82,7 @@ export default function ShoppingScreen() {
       <ParallaxScrollView
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={fetchItems} />  }
         headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
+             
         headerImage={
           <Image
             source={require('@/assets/images/partial-react-logo.png')}
@@ -95,18 +96,19 @@ export default function ShoppingScreen() {
     );
   }
 
-  return (
-      <ParallaxScrollView
-            headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-            headerImage={
-              <Image
-                source={require('@/assets/images/partial-react-logo.png')}
-                style={styles.reactLogo}
-              />
-            }
-            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-          >
-        <ShoppingList items={items} />
+return (
+    <ParallaxScrollView
+          headerBackgroundColor={{ light: '#A1CEDC', dark: '#eef1f1' }}
+          headerImage={
+            <Image
+              source={require('@/assets/images/logo_518_ListeDesCourses.png')}
+              style={styles.reactLogo}
+              contentFit="cover"
+            />
+          }
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        >         
+        <ShoppingList items={items} />  
     </ParallaxScrollView>
   );
 }
@@ -122,13 +124,17 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
+    width: '100%',
+    height: '100%',
     position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
   },
   centerContainer: {
+     width: '100%',
+    height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
