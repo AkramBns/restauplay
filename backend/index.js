@@ -113,6 +113,7 @@ app.get('/items', verifyToken, (req, res) => {
 // Create ShoppingTransaction
 app.post('/transactions', verifyToken, (req, res) => {
   const { description, state, shopping_item_id, employee_id, price, quantity, supplier } = req.body;
+  console.log("create transaction : ", req.body);
   if (!shopping_item_id || !employee_id) return res.status(400).json({ error: 'shopping_item_id and employee_id are required' });
 
   try {
@@ -150,6 +151,14 @@ app.put('/transactions/:id', verifyToken, (req, res) => {
     console.error("update error: " + err); // Print the error stack trace
     res.status(400).json({ error: 'Invalid shopping_item_id or employee_id' });
   }
+});
+
+app.get('/items/names', verifyToken, (req, res) => {
+  const search = String(req.query.search || '');
+  const limit = Number.parseInt(req.query.limit, 10) || 10;
+  console.log("search : ", search + " limit : " + limit );
+  const items = db.prepare('SELECT t.id, i.name, t.unit FROM ShoppingItem i inner JOIN ShoppingTransaction t on i.id =t.shopping_item_id WHERE i.name LIKE ? LIMIT ?').all(`%${search}%`, limit);
+  res.json(items);
 });
 
 // Get all ShoppingTransactions

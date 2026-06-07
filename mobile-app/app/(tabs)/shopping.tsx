@@ -6,9 +6,9 @@ import { ActivityIndicator, RefreshControl, StyleSheet, Text, View } from 'react
 import ParallaxScrollView from '@/components/parallax-scroll-view';
 import ShoppingList from '@/components/shoppingList';
 import { API_ENDPOINTS } from '@/constants/api';
+import { useTheme } from '@/hooks/useTheme';
 import { ShoppingItem } from '@/types/types';
 import { getAccessToken } from '@/utils/auth';
-import { useTheme } from '@/hooks/useTheme';
 
 export default function ShoppingScreen() {
   const [items, setItems] = useState<ShoppingItem[]>([]);
@@ -124,8 +124,8 @@ export default function ShoppingScreen() {
 
 const styles = StyleSheet.create({
   logoImage: {
-    height: 178,
-    width: 290,
+    width: '100%',
+    height: '100%',
     bottom: 0,
     left: 0,
     position: 'absolute',

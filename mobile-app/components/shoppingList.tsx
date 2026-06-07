@@ -1,14 +1,14 @@
+import { Ionicons } from '@expo/vector-icons';
 import { LegendList } from "@legendapp/list";
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 
+import { ThemedButton } from '@/components/themed-button';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { ThemedButton } from '@/components/themed-button';
+import { useTheme } from '@/hooks/useTheme';
 import { ShoppingItem } from '@/types/types';
 import { Link } from 'expo-router';
-import { useTheme } from '@/hooks/useTheme';
 
 const ShoppingList = ({ items }: { items: ShoppingItem[] }) => {
   const theme = useTheme();
@@ -75,12 +75,10 @@ const ShoppingList = ({ items }: { items: ShoppingItem[] }) => {
   return (
     <ThemedView style={[styles.container, { backgroundColor: theme.colors.background }]}>
       <Link href="/modal" asChild>
-        <TouchableOpacity style={styles.addButtonWrapper}>
-          <ThemedButton variant="primary" size="lg" style={styles.addButton}>
-            <Ionicons name="add-circle" size={20} color="#fff" style={styles.addButtonIcon} />
-            Add New Item
-          </ThemedButton>
-        </TouchableOpacity>
+        <ThemedButton variant="primary" size="lg" style={[styles.addButton, styles.addButtonWrapper]}>
+          <Ionicons name="add-circle" size={20} color="#fff" style={styles.addButtonIcon} />
+          Add New Item
+        </ThemedButton>
       </Link>
 
       <LegendList
@@ -104,11 +102,25 @@ const ShoppingList = ({ items }: { items: ShoppingItem[] }) => {
               }}
               asChild
             >
+              {
+                // compute inline row style with sensible fallbacks so the border is always visible
+              }
               <TouchableOpacity
                 style={[
                   styles.row,
                   {
                     backgroundColor: statusStyle.backgroundColor,
+                  },
+                  // ensure borderColor falls back to theme border or a neutral value
+                  {
+                    borderColor: statusStyle.borderColor ?? theme.colors.border ?? '#ddd',
+                    borderStyle: 'solid',
+                    // subtle shadow/elevation to make the rounded card stand out
+                    shadowColor: '#000',
+                    shadowOffset: { width: 0, height: 1 },
+                    shadowOpacity: 0.08,
+                    shadowRadius: 2,
+                    elevation: 2,
                   },
                 ]}
                 activeOpacity={0.7}
@@ -121,47 +133,19 @@ const ShoppingList = ({ items }: { items: ShoppingItem[] }) => {
                     color={statusStyle.statusColor}
                   />
                   <View
-                    style={[
-                      styles.statusBadge,
-                      { backgroundColor: statusStyle.statusColor },
-                    ]}
+                   
                   >
-                    <ThemedText
-                      variant="labelSmall"
-                      style={styles.statusBadgeText}
-                    >
-                      {getStatusLabel(item.state)}
+                    <ThemedText variant="labelSmall" >
+                       {item.quantity} {item.unit} {item.name}
                     </ThemedText>
                   </View>
                 </View>
 
                 {/* Text Container */}
                 <View style={[styles.textContainer, { flex: 1 }]}>
-                  <ThemedText
-                    variant="titleMedium"
-                    style={[
-                      styles.name,
-                      { color: statusStyle.textColor },
-                    ]}
-                  >
-                    {item.name}
-                  </ThemedText>
-                  <ThemedText
-                    variant="bodySmall"
-                    style={[
-                      styles.description,
-                      { color: statusStyle.textColor },
-                    ]}
-                  >
-                    {item.quantity} {item.unit}
-                  </ThemedText>
                   {item.description && (
                     <ThemedText
-                      variant="labelSmall"
-                      style={[
-                        styles.note,
-                        { color: statusStyle.textColor },
-                      ]}
+                      variant="bodySmall"
                     >
                       {item.description}
                     </ThemedText>
@@ -199,6 +183,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   row: {
+    borderWidth: 2, 
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 14,
@@ -207,6 +192,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   iconStatusGroup: {
+    
     flexDirection: 'row',
     alignItems: 'center',
     marginRight: 12,

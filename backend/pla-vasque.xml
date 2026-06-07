@@ -1,0 +1,40 @@
+<svg width="1800" height="800" viewBox="0 0 1800 800" xmlns="http://www.w3.org/2000/svg" style="background:#ffffff">
+  <!-- Plan vasque avec espace tout autour -->
+  <rect x="100" y="100" width="1600" height="600" fill="none" stroke="black" stroke-width="4"/>
+
+  <!-- Évier extérieur -->
+  <rect x="595" y="210" width="610" height="380" fill="none" stroke="blue" stroke-width="2"/>
+
+  <!-- Évier intérieur -->
+  <rect x="625.5" y="235" width="559" height="330" fill="none" stroke="cyan" stroke-dasharray="10,5" stroke-width="2"/>
+
+  <!-- Trous robinet -->
+  <circle cx="750" cy="175" r="10" fill="gold" stroke="black" stroke-width="1"/>
+  <circle cx="900" cy="175" r="10" fill="gold" stroke="black" stroke-width="1"/>
+  <circle cx="1050" cy="175" r="10" fill="gold" stroke="black" stroke-width="1"/>
+
+  <!-- Lignes guide axe trous -->
+  <line x1="50" y1="175" x2="1750" y2="175" stroke="red" stroke-dasharray="5,5" stroke-width="1"/>
+
+  <!-- Annotations texte -->
+  <text x="800" y="780" font-family="Arial" font-size="24" fill="black" text-anchor="middle">Plan vasque 1600x600 mm</text>
+  <text x="800" y="650" font-family="Arial" font-size="20" fill="blue" text-anchor="middle">Évier Kaldewei Centro</text>
+
+  <!-- Flèche annotation mur -->
+  <line x1="680" y1="100" x2="680" y2="165" stroke="black" marker-end="url(#arrow)" />
+  <text x="685" y="160" font-family="Arial" font-size="16" fill="black">80 mm</text>
+
+  <!-- Flèche annotation mur -->
+  <line x1="780" y1="173" x2="780" y2="205" stroke="black" marker-end="url(#arrow)" />
+  <text x="785" y="195" font-family="Arial" font-size="16" fill="black">65 mm</text>
+
+  <!-- Flèche annotation bord évier -->
+  <line x1="100" y1="175" x2="900" y2="175" stroke="black" marker-end="url(#arrow)" />
+  <text x="500" y="120" font-family="Arial" font-size="16" fill="black" text-anchor="middle">800 mm</text>
+
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 L4,5 z" fill="black"/>
+    </marker>
+  </defs>
+</svg>

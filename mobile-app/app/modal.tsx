@@ -12,6 +12,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
@@ -23,6 +24,10 @@ export default function ModalScreen() {
   const router = useRouter();
   const { employeeId } = useAuth();
 
+  console.log('>>>>>>>>>>>>>>>>>>>>>>> employeeId ', employeeId);
+  console.log('>>>>>>>>>>>>>>>>>>>>>>> useAuth() ', useAuth());
+
+
   const [formData, setFormData] = useState({
     id: params.id ? Number(params.id) : 0,
     itemId: params.itemId ? Number(params.itemId) : 0,  // ← add this
@@ -31,13 +36,18 @@ export default function ModalScreen() {
     state: params.state ? String(params.state) : 'pending',
     quantity: params.quantity ? Number(params.quantity) : 1,
     unit: params.unit ? String(params.unit) : '',
+    // planned_on defaults to today in DD.MM.YYYY format
+    planned_on: params.planned_on ? String(params.planned_on) : formatDate(new Date()),
+    // hidden timestamps
+    created: params.created ? String(params.created) : formatDateTime(new Date()),
+    updated: params.updated ? String(params.updated) : formatDateTime(new Date()),
   });
 
   // --- Autocomplete state ---
   const [isSearching, setIsSearching] = useState(false);         // ✅ add
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const [suggestions, setSuggestions] = useState<{ id: number; name: string }[]>([]);
+  const [suggestions, setSuggestions] = useState<{ id: number; name: string; unit: string }[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const nameInputRef = useRef<TextInput>(null);
 
@@ -70,10 +80,12 @@ export default function ModalScreen() {
             { headers: { Authorization: `Bearer ${token}` } }
           );
           if (response.ok) {
-            const data: { id: number; name: string }[] = await response.json();
-
+            const data: { id: number; name: string , unit: string }[] = await response.json();
+            console.log('Autocomplete suggestions:', data);
             setSuggestions(data);
             setShowSuggestions(data.length > 0);
+          } else {
+            console.log('Autocomplete search failed with status:', response.status , response.text());
           }
         } catch (e) {
           console.log('Autocomplete search failed:', e);
@@ -83,8 +95,30 @@ export default function ModalScreen() {
     }, 300);
   };
 
-const handleSelectSuggestion = (item: { id: number; name: string }) => {
-  setFormData(prev => ({ ...prev, name: item.name, itemId: item.id }));
+  // Date picker visibility
+  const [isDatePickerVisible, setDatePickerVisible] = useState(false);
+
+  // Helpers: formatters and parsers
+  function pad(n: number) { return n < 10 ? `0${n}` : `${n}`; }
+  function formatDate(d: Date) {
+    return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()}`;
+  }
+  function formatDateTime(d: Date) {
+    return `${pad(d.getDate())}.${pad(d.getMonth() + 1)}.${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+  function parseDateFromDDMMYYYY(s?: string) {
+    if (!s) return null;
+    const parts = s.split('.');
+    if (parts.length < 3) return null;
+    const day = Number(parts[0]);
+    const month = Number(parts[1]) - 1;
+    const year = Number(parts[2]);
+    const date = new Date(year, month, day);
+    return isNaN(date.getTime()) ? null : date;
+  }
+
+const handleSelectSuggestion = (item: { id: number; name: string , unit: string }) => {
+  setFormData(prev => ({ ...prev, name: item.name, itemId: item.id, unit: item.unit }));
   setSuggestions([]);
   setShowSuggestions(false);
   nameInputRef.current?.blur();
@@ -100,17 +134,26 @@ const handleSelectSuggestion = (item: { id: number; name: string }) => {
 
   const handleSave = async () => {
     try {
-        const token = await getAccessToken();
-        const method = formData.id ? 'PUT' : 'POST';
-        const url = formData.id
-          ? `${API_ENDPOINTS.transactions}/${formData.id}`
-          : API_ENDPOINTS.transactions;
-        const payload = { ...formData, employee_id: employeeId };
-        const response = await fetch(url, {
-          method,
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-          body: JSON.stringify(payload),
-        });
+      const token = await getAccessToken();
+      const method = formData.id ? 'PUT' : 'POST';
+      const url = formData.id
+        ? `${API_ENDPOINTS.transactions}/${formData.id}`
+        : API_ENDPOINTS.transactions;
+      const now = new Date();
+      const payload = {
+        ...formData,
+        employee_id: employeeId,
+        shopping_item_id : formData.itemId,
+        // set updated to now, ensure created exists
+        updated: formatDateTime(now),
+        created: formData.created ? formData.created : formatDateTime(now),
+      };
+      console.log('Saving item with payload:', payload);
+      const response = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify(payload),
+      });
         if (response.ok) {
           router.back();
         } else {
@@ -222,6 +265,26 @@ const handleSelectSuggestion = (item: { id: number; name: string }) => {
               placeholderTextColor="#999"
             />
           </View>
+        </View>
+
+        <View style={styles.formGroup}>
+          <ThemedText type="subtitle">Planned on</ThemedText>
+          <TouchableOpacity
+            style={[styles.input, { justifyContent: 'center' }]}
+            onPress={() => setDatePickerVisible(true)}
+          >
+            <Text style={{ color: formData.planned_on ? '#000' : '#999' }}>{formData.planned_on}</Text>
+          </TouchableOpacity>
+          <DateTimePickerModal
+            isVisible={isDatePickerVisible}
+            mode="date"
+            date={parseDateFromDDMMYYYY(formData.planned_on) || new Date()}
+            onConfirm={(date: Date) => {
+              setFormData(prev => ({ ...prev, planned_on: formatDate(date) }));
+              setDatePickerVisible(false);
+            }}
+            onCancel={() => setDatePickerVisible(false)}
+          />
         </View>
 
         <View style={styles.formGroup}>

@@ -79,7 +79,7 @@ const login = (db) => {
         { expiresIn: '7d' }
       );
      
-      res.status(200).json({ accessToken: token });
+      res.status(200).json({ employeeId: employee.id, accessToken: token });
       console.log('Login for user:', email + ' response  ' + res );
     } catch (err) {
       console.error(err);
