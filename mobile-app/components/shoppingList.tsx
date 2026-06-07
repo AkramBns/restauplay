@@ -110,6 +110,7 @@ const ShoppingList = ({ items }: { items: ShoppingItem[] }) => {
                   styles.row,
                   {
                     backgroundColor: statusStyle.backgroundColor,
+                    borderColor: statusStyle.borderColor,
                   },
                   // ensure borderColor falls back to theme border or a neutral value
                   {
@@ -190,6 +191,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     marginBottom: 10,
     borderRadius: 12,
+    borderWidth: 1.5,
   },
   iconStatusGroup: {
     
