@@ -8,7 +8,10 @@ app.use(express.json());
 
 // SQLite database
 const dbPath = path.join(__dirname, 'shopping.db');
-const db = new Database(dbPath);
+console.log('Database path:', dbPath);
+const db = new Database(dbPath, {
+  verbose: (sql) => console.log('[SQL]', sql),
+});
 db.pragma('foreign_keys = ON');
 
 // ===========================
@@ -112,20 +115,34 @@ app.get('/items', verifyToken, (req, res) => {
 
 // Create ShoppingTransaction
 app.post('/transactions', verifyToken, (req, res) => {
-  const { description, state, shopping_item_id, employee_id, price, quantity, supplier } = req.body;
+  const { name, description, state, shopping_item_id: incomingShoppingItemId, employee_id, price, quantity, supplier } = req.body;
+  let shoppingItemId = incomingShoppingItemId;
   console.log("create transaction : ", req.body);
-  if (!shopping_item_id || !employee_id) return res.status(400).json({ error: 'shopping_item_id and employee_id are required' });
+  if (!employee_id) return res.status(400).json({ error: 'employee_id is required' });
 
   try {
+    // IF shopping_item_id is not provided, we will insert null and let the database handle it (if it allows nulls)
+
+    if (!shoppingItemId) {
+      console.log("shopping_item_id is not provided, creating new shopping item with name: " + name + " and description: " + description);
+      const stmt = db.prepare(`
+        INSERT INTO ShoppingItem (name, group_id, description) VALUES (?, ?, ?)
+      `);
+      const result = stmt.run(name, 1, description || null);
+      shoppingItemId = result.lastInsertRowid;
+      console.log("Created new shopping " + name + "item with id: " + shoppingItemId);
+    }
+
     const stmt = db.prepare(`
       INSERT INTO ShoppingTransaction 
       (description, state, shopping_item_id, employee_id, price, quantity, supplier, creation_date, update_date)
       VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
     `);
-    const result = stmt.run(description || null, state || 'pending', shopping_item_id, employee_id, price || null, quantity || null, supplier || null);
+    const result = stmt.run(description || null, state || 'pending', shoppingItemId, employee_id, price || null, quantity || null, supplier || null);
     const transaction = db.prepare('SELECT * FROM ShoppingTransaction WHERE id = ?').get(result.lastInsertRowid);
     res.status(201).json(transaction);
   } catch (err) {
+    console.error("create error: " + err); // Print the error stack trace
     res.status(400).json({ error: 'Invalid shopping_item_id or employee_id' });
   }
 });
@@ -157,8 +174,14 @@ app.get('/items/names', verifyToken, (req, res) => {
   const search = String(req.query.search || '');
   const limit = Number.parseInt(req.query.limit, 10) || 10;
   console.log("search : ", search + " limit : " + limit );
-  const items = db.prepare('SELECT t.id, i.name, t.unit FROM ShoppingItem i inner JOIN ShoppingTransaction t on i.id =t.shopping_item_id WHERE i.name LIKE ? LIMIT ?').all(`%${search}%`, limit);
+
+
+
+
+
+  const items = db.prepare('SELECT i.id as id, t.id as trx_id, i.name, t.unit FROM ShoppingItem i inner JOIN ShoppingTransaction t on i.id =t.shopping_item_id WHERE i.name LIKE ? LIMIT ?').all(`%${search}%`, limit);
   res.json(items);
+  console.log("items : ", items);
 });
 
 // Get all ShoppingTransactions

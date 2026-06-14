@@ -24,10 +24,6 @@ export default function ModalScreen() {
   const router = useRouter();
   const { employeeId } = useAuth();
 
-  console.log('>>>>>>>>>>>>>>>>>>>>>>> employeeId ', employeeId);
-  console.log('>>>>>>>>>>>>>>>>>>>>>>> useAuth() ', useAuth());
-
-
   const [formData, setFormData] = useState({
     id: params.id ? Number(params.id) : 0,
     itemId: params.itemId ? Number(params.itemId) : 0,  // ← add this
@@ -148,7 +144,7 @@ const handleSelectSuggestion = (item: { id: number; name: string , unit: string 
         updated: formatDateTime(now),
         created: formData.created ? formData.created : formatDateTime(now),
       };
-      console.log('Saving item with payload:', payload);
+      console.log('Saving item with payload:', payload, url);
       const response = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
