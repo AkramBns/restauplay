@@ -1,0 +1,123 @@
+{
+  "common": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "add": "إضافة",
+    "loading": "جارٍ التحميل...",
+    "restartRequiredTitle": "إعادة التشغيل مطلوبة",
+    "restartRequiredMessage": "يرجى إعادة تشغيل التطبيق لتطبيق اتجاه النص الجديد بالكامل.",
+    "restartNow": "إعادة التشغيل الآن",
+    "later": "لاحقًا",
+    "ok": "حسنًا"
+  },
+  "auth": {
+    "title": "تطبيق مطعمي",
+    "subtitle": "سجّل الدخول للمتابعة",
+    "language": "اللغة",
+    "emailPlaceholder": "البريد الإلكتروني",
+    "passwordPlaceholder": "كلمة المرور",
+    "loginButton": "تسجيل الدخول",
+    "missingFieldsError": "يرجى إدخال البريد الإلكتروني وكلمة المرور",
+    "genericError": "تعذّر تسجيل الدخول"
+  },
+  "tabs": {
+    "home": "الرئيسية",
+    "shoppingList": "قائمة التسوق",
+    "staff": "الموظفون",
+    "logout": "تسجيل الخروج"
+  },
+  "home": {
+    "welcome": "مرحبًا، {{name}}!",
+    "role": "الوظيفة: {{role}}",
+    "announcements": "الإعلانات",
+    "noAnnouncements": "لا توجد إعلانات حتى الآن."
+  },
+  "shopping": {
+    "filters": {
+      "todayOverdue": "اليوم والسابقة",
+      "upcoming": "قادم",
+      "all": "الكل",
+      "allStatuses": "جميع الحالات",
+      "allCategories": "جميع الفئات"
+    },
+    "status": {
+      "pending": "قيد الانتظار",
+      "in_progress": "قيد التنفيذ",
+      "completed": "مكتمل",
+      "cancelled": "ملغى"
+    },
+    "categories": {
+      "vegetables": "خضروات",
+      "fruits": "فواكه",
+      "meatFish": "لحوم وأسماك",
+      "dairy": "ألبان",
+      "bakery": "مخبوزات",
+      "beverages": "مشروبات",
+      "cleaning": "منظفات",
+      "other": "أخرى"
+    },
+    "noItems": "لا توجد عناصر في هذا العرض.",
+    "planned": "مبرمج",
+    "addItem": "إضافة عنصر",
+    "editItem": "تعديل العنصر",
+    "namePlaceholder": "الاسم *",
+    "descriptionPlaceholder": "الوصف",
+    "categoryLabel": "الفئة",
+    "categoryPlaceholder": "الفئة (أو اكتب فئة مخصصة)",
+    "quantityPlaceholder": "الكمية *",
+    "unitPlaceholder": "الوحدة * (كجم، لتر، قطعة...)",
+    "pricePlaceholder": "السعر لكل وحدة",
+    "plannedOnPlaceholder": "التاريخ المخطط * (YYYY-MM-DD)",
+    "requiredFieldsError": "الاسم والكمية والوحدة والتاريخ المخطط مطلوبة",
+    "saveFailedError": "فشل حفظ العنصر",
+    "loadFailedError": "فشل تحميل قائمة التسوق",
+    "updateFailedError": "فشل تحديث العنصر",
+    "deleteFailedError": "فشل حذف العنصر",
+    "actions": {
+      "edit": "تعديل العنصر",
+      "start": "تعيين كقيد التنفيذ",
+      "complete": "تعيين كمكتمل",
+      "delete": "حذف العنصر"
+    }
+  },
+  "staff": {
+    "registryTab": "سجل الموظفين",
+    "presenceTab": "الحضور",
+    "addStaff": "إضافة موظف",
+    "editStaff": "تعديل الموظف",
+    "firstNamePlaceholder": "الاسم الأول *",
+    "lastNamePlaceholder": "اسم العائلة *",
+    "emailPlaceholder": "البريد الإلكتروني *",
+    "newPasswordPlaceholder": "كلمة مرور جديدة (اتركها فارغة للاحتفاظ بالحالية)",
+    "passwordPlaceholder": "كلمة المرور *",
+    "phonePlaceholder": "الهاتف",
+    "addressPlaceholder": "العنوان",
+    "birthDatePlaceholder": "تاريخ الميلاد (YYYY-MM-DD)",
+    "startWorkDatePlaceholder": "تاريخ بدء العمل (YYYY-MM-DD)",
+    "roleLabel": "الدور",
+    "roles": {
+      "staff": "موظف",
+      "buyer": "مشترٍ",
+      "admin": "مدير"
+    },
+    "block": "حظر",
+    "unblock": "إلغاء الحظر",
+    "remove": "إزالة",
+    "blocked": "(محظور)",
+    "requiredFieldsError": "الاسم الأول واسم العائلة والبريد الإلكتروني وكلمة المرور (للمستخدمين الجدد) مطلوبة",
+    "saveFailedError": "فشل حفظ المستخدم",
+    "loadFailedError": "فشل تحميل بيانات الموظفين",
+    "updateFailedError": "فشل تحديث المستخدم",
+    "removeFailedError": "فشل إزالة المستخدم",
+    "presence": {
+      "staffMember": "الموظف",
+      "hint": "اضغط على يوم للتبديل: حاضر ← غائب ← متأخر ← مريض. البنفسجي = في إجازة.",
+      "vacationPeriods": "فترات الإجازة",
+      "noVacation": "لا توجد فترات إجازة هذا الشهر.",
+      "loadFailedError": "فشل تحميل بيانات الحضور",
+      "saveFailedError": "فشل حفظ الحضور"
+    }
+  }
+}

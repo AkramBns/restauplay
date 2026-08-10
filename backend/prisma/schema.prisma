@@ -1,0 +1,113 @@
+// Prisma schema for the restaurant management app.
+//
+// DATABASE PORTABILITY NOTE:
+// This is configured for SQLite today (zero-config, file-based, perfect for a
+// small restaurant). To scale up later, change `provider` below to
+// "postgresql" or "mysql", set DATABASE_URL to the new connection string in
+// .env, and run `npx prisma migrate dev`. No application code changes are
+// needed — every query goes through Prisma Client, not raw SQL.
+//
+// Fields that would ideally be a native `enum` (role, status, etc.) are
+// modeled as String instead, because SQLite has no enum support. This keeps
+// the schema portable across all three databases. Valid values are validated
+// in the API layer (see src/utils/validation.js).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(uuid())
+  firstName     String
+  lastName      String
+  email         String   @unique
+  passwordHash  String
+  phone         String?
+  address       String?
+  birthDate     DateTime?
+  startWorkDate DateTime?
+  role          String   @default("staff") // "staff" | "buyer" | "admin"
+  accountStatus String   @default("active") // "active" | "blocked"
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  announcementsCreated Announcement[]  @relation("AnnouncementCreatedBy")
+  shoppingItemsCreated ShoppingItem[]  @relation("ShoppingItemCreatedBy")
+  shoppingItemsUpdated ShoppingItem[]  @relation("ShoppingItemUpdatedBy")
+  presences            Presence[]      @relation("PresenceOf")
+  presencesRecordedBy  Presence[]      @relation("PresenceRecordedBy")
+  vacations            Vacation[]      @relation("VacationOf")
+  vacationsRecordedBy  Vacation[]      @relation("VacationRecordedBy")
+}
+
+model Announcement {
+  id          String   @id @default(uuid())
+  title       String
+  htmlContent String
+  publishedAt DateTime @default(now())
+  createdById String
+  createdBy   User     @relation("AnnouncementCreatedBy", fields: [createdById], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ShoppingItem {
+  id          String    @id @default(uuid())
+  name        String
+  description String?
+  category    String?   // e.g. "Vegetables", "Meat & Fish", "Beverages", "Cleaning" — free text, suggested list lives in the UI
+  quantity    Float
+  unit        String    // e.g. "kg", "l", "pcs", "box"
+  price       Float?    // price per unit, optional
+  plannedOn   DateTime
+  status      String    @default("pending") // "pending" | "in_progress" | "completed" | "cancelled"
+
+  createdById String
+  createdBy   User      @relation("ShoppingItemCreatedBy", fields: [createdById], references: [id])
+  createdAt   DateTime  @default(now())
+
+  updatedById String?
+  updatedBy   User?     @relation("ShoppingItemUpdatedBy", fields: [updatedById], references: [id])
+  updatedAt   DateTime  @updatedAt
+
+  @@index([plannedOn])
+  @@index([status])
+}
+
+model Presence {
+  id             String   @id @default(uuid())
+  userId         String
+  user           User     @relation("PresenceOf", fields: [userId], references: [id])
+  date           DateTime
+  status         String   // "present" | "absent" | "late" | "sick"
+  notes          String?
+  recordedById   String
+  recordedBy     User     @relation("PresenceRecordedBy", fields: [recordedById], references: [id])
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([userId, date])
+  @@index([date])
+}
+
+model Vacation {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation("VacationOf", fields: [userId], references: [id])
+  startDate    DateTime
+  endDate      DateTime
+  type         String   @default("vacation") // "vacation" | "sick" | "unpaid" | "other"
+  status       String   @default("approved") // "requested" | "approved" | "rejected"
+  notes        String?
+  recordedById String
+  recordedBy   User     @relation("VacationRecordedBy", fields: [recordedById], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([startDate, endDate])
+}

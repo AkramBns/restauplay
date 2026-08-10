@@ -1,0 +1,123 @@
+{
+  "common": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "add": "Ajouter",
+    "loading": "Chargement...",
+    "restartRequiredTitle": "Redémarrage nécessaire",
+    "restartRequiredMessage": "Veuillez redémarrer l'application pour appliquer complètement le nouveau sens d'écriture.",
+    "restartNow": "Redémarrer maintenant",
+    "later": "Plus tard",
+    "ok": "OK"
+  },
+  "auth": {
+    "title": "Gestionnaire de Restaurant",
+    "subtitle": "Connectez-vous pour continuer",
+    "language": "Langue",
+    "emailPlaceholder": "E-mail",
+    "passwordPlaceholder": "Mot de passe",
+    "loginButton": "Se connecter",
+    "missingFieldsError": "Veuillez saisir votre e-mail et votre mot de passe",
+    "genericError": "Impossible de se connecter"
+  },
+  "tabs": {
+    "home": "Accueil",
+    "shoppingList": "Liste de courses",
+    "staff": "Personnel",
+    "logout": "Déconnexion"
+  },
+  "home": {
+    "welcome": "Bienvenue, {{name}} !",
+    "role": "Rôle : {{role}}",
+    "announcements": "Annonces",
+    "noAnnouncements": "Aucune annonce pour le moment."
+  },
+  "shopping": {
+    "filters": {
+      "todayOverdue": "Aujourd'hui et en retard",
+      "upcoming": "À venir",
+      "all": "Tout",
+      "allStatuses": "Tous les statuts",
+      "allCategories": "Toutes les catégories"
+    },
+    "status": {
+      "pending": "En attente",
+      "in_progress": "En cours",
+      "completed": "Terminé",
+      "cancelled": "Annulé"
+    },
+    "categories": {
+      "vegetables": "Légumes",
+      "fruits": "Fruits",
+      "meatFish": "Viande & Poisson",
+      "dairy": "Produits laitiers",
+      "bakery": "Boulangerie",
+      "beverages": "Boissons",
+      "cleaning": "Nettoyage",
+      "other": "Autre"
+    },
+    "noItems": "Aucun article dans cette vue.",
+    "planned": "Prévu",
+    "addItem": "Ajouter un article",
+    "editItem": "Modifier l'article",
+    "namePlaceholder": "Nom *",
+    "descriptionPlaceholder": "Description",
+    "categoryLabel": "Catégorie",
+    "categoryPlaceholder": "Catégorie (ou saisissez-en une)",
+    "quantityPlaceholder": "Quantité *",
+    "unitPlaceholder": "Unité * (kg, l, pcs...)",
+    "pricePlaceholder": "Prix par unité",
+    "plannedOnPlaceholder": "Prévu le * (AAAA-MM-JJ)",
+    "requiredFieldsError": "Le nom, la quantité, l'unité et la date prévue sont requis",
+    "saveFailedError": "Échec de l'enregistrement de l'article",
+    "loadFailedError": "Échec du chargement de la liste de courses",
+    "updateFailedError": "Échec de la mise à jour de l'article",
+    "deleteFailedError": "Échec de la suppression de l'article",
+    "actions": {
+      "edit": "Modifier l'article",
+      "start": "Marquer en cours",
+      "complete": "Marquer comme terminé",
+      "delete": "Supprimer l'article"
+    }
+  },
+  "staff": {
+    "registryTab": "Registre du personnel",
+    "presenceTab": "Présence",
+    "addStaff": "Ajouter un employé",
+    "editStaff": "Modifier l'employé",
+    "firstNamePlaceholder": "Prénom *",
+    "lastNamePlaceholder": "Nom *",
+    "emailPlaceholder": "E-mail *",
+    "newPasswordPlaceholder": "Nouveau mot de passe (laisser vide pour conserver)",
+    "passwordPlaceholder": "Mot de passe *",
+    "phonePlaceholder": "Téléphone",
+    "addressPlaceholder": "Adresse",
+    "birthDatePlaceholder": "Date de naissance (AAAA-MM-JJ)",
+    "startWorkDatePlaceholder": "Date d'entrée en fonction (AAAA-MM-JJ)",
+    "roleLabel": "Rôle",
+    "roles": {
+      "staff": "personnel",
+      "buyer": "acheteur",
+      "admin": "administrateur"
+    },
+    "block": "Bloquer",
+    "unblock": "Débloquer",
+    "remove": "Supprimer",
+    "blocked": "(bloqué)",
+    "requiredFieldsError": "Le prénom, le nom, l'e-mail et (pour les nouveaux utilisateurs) le mot de passe sont requis",
+    "saveFailedError": "Échec de l'enregistrement de l'utilisateur",
+    "loadFailedError": "Échec du chargement du personnel",
+    "updateFailedError": "Échec de la mise à jour de l'utilisateur",
+    "removeFailedError": "Échec de la suppression de l'utilisateur",
+    "presence": {
+      "staffMember": "Employé",
+      "hint": "Appuyez sur un jour pour changer : présent → absent → en retard → malade. Violet = en congé.",
+      "vacationPeriods": "Périodes de congé",
+      "noVacation": "Aucune période de congé ce mois-ci.",
+      "loadFailedError": "Échec du chargement des données de présence",
+      "saveFailedError": "Échec de l'enregistrement de la présence"
+    }
+  }
+}

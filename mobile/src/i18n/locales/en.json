@@ -1,0 +1,123 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "add": "Add",
+    "loading": "Loading...",
+    "restartRequiredTitle": "Restart required",
+    "restartRequiredMessage": "Please restart the app to fully apply the new text direction.",
+    "restartNow": "Restart now",
+    "later": "Later",
+    "ok": "OK"
+  },
+  "auth": {
+    "title": "Restaurant Manager",
+    "subtitle": "Sign in to continue",
+    "language": "Language",
+    "emailPlaceholder": "Email",
+    "passwordPlaceholder": "Password",
+    "loginButton": "Log in",
+    "missingFieldsError": "Please enter your email and password",
+    "genericError": "Unable to log in"
+  },
+  "tabs": {
+    "home": "Home",
+    "shoppingList": "Shopping List",
+    "staff": "Staff",
+    "logout": "Log out"
+  },
+  "home": {
+    "welcome": "Welcome, {{name}}!",
+    "role": "Role: {{role}}",
+    "announcements": "Announcements",
+    "noAnnouncements": "No announcements yet."
+  },
+  "shopping": {
+    "filters": {
+      "todayOverdue": "Today & overdue",
+      "upcoming": "Upcoming",
+      "all": "All",
+      "allStatuses": "All statuses",
+      "allCategories": "All categories"
+    },
+    "status": {
+      "pending": "Pending",
+      "in_progress": "In progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "categories": {
+      "vegetables": "Vegetables",
+      "fruits": "Fruits",
+      "meatFish": "Meat & Fish",
+      "dairy": "Dairy",
+      "bakery": "Bakery",
+      "beverages": "Beverages",
+      "cleaning": "Cleaning",
+      "other": "Other"
+    },
+    "noItems": "No items in this view.",
+    "planned": "Planned",
+    "addItem": "Add Item",
+    "editItem": "Edit Item",
+    "namePlaceholder": "Name *",
+    "descriptionPlaceholder": "Description",
+    "categoryLabel": "Category",
+    "categoryPlaceholder": "Category (or type a custom one)",
+    "quantityPlaceholder": "Quantity *",
+    "unitPlaceholder": "Unit * (kg, l, pcs...)",
+    "pricePlaceholder": "Price per unit",
+    "plannedOnPlaceholder": "Planned on * (YYYY-MM-DD)",
+    "requiredFieldsError": "Name, quantity, unit and planned date are required",
+    "saveFailedError": "Failed to save item",
+    "loadFailedError": "Failed to load shopping list",
+    "updateFailedError": "Failed to update item",
+    "deleteFailedError": "Failed to delete item",
+    "actions": {
+      "edit": "Edit item",
+      "start": "Mark as in progress",
+      "complete": "Mark as completed",
+      "delete": "Delete item"
+    }
+  },
+  "staff": {
+    "registryTab": "Staff Registry",
+    "presenceTab": "Presence",
+    "addStaff": "Add Staff Member",
+    "editStaff": "Edit Staff Member",
+    "firstNamePlaceholder": "First name *",
+    "lastNamePlaceholder": "Last name *",
+    "emailPlaceholder": "Email *",
+    "newPasswordPlaceholder": "New password (leave blank to keep)",
+    "passwordPlaceholder": "Password *",
+    "phonePlaceholder": "Phone",
+    "addressPlaceholder": "Address",
+    "birthDatePlaceholder": "Birth date (YYYY-MM-DD)",
+    "startWorkDatePlaceholder": "Start work date (YYYY-MM-DD)",
+    "roleLabel": "Role",
+    "roles": {
+      "staff": "staff",
+      "buyer": "buyer",
+      "admin": "admin"
+    },
+    "block": "Block",
+    "unblock": "Unblock",
+    "remove": "Remove",
+    "blocked": "(blocked)",
+    "requiredFieldsError": "First name, last name, email, and (for new users) password are required",
+    "saveFailedError": "Failed to save user",
+    "loadFailedError": "Failed to load staff",
+    "updateFailedError": "Failed to update user",
+    "removeFailedError": "Failed to remove user",
+    "presence": {
+      "staffMember": "Staff member",
+      "hint": "Tap a day to cycle: present → absent → late → sick. Purple = on vacation.",
+      "vacationPeriods": "Vacation periods",
+      "noVacation": "No vacation periods this month.",
+      "loadFailedError": "Failed to load presence data",
+      "saveFailedError": "Failed to save presence"
+    }
+  }
+}

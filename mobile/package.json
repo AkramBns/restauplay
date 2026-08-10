@@ -1,0 +1,36 @@
+{
+  "name": "restaurant-app-mobile",
+  "version": "1.0.0",
+  "main": "expo-router/entry",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "@expo/vector-icons": "^15.1.1",
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "babel-preset-expo": "~56.0.0",
+    "expo": "^56.0.17",
+    "expo-constants": "~56.0.22",
+    "expo-linking": "~56.0.16",
+    "expo-router": "~56.2.16",
+    "expo-status-bar": "~56.0.4",
+    "i18next": "^23.11.5",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "react-i18next": "^14.1.2",
+    "react-native": "0.85.3",
+    "react-native-safe-area-context": "~5.7.0",
+    "react-native-screens": "~4.26.0",
+    "react-native-web": "^0.21.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.24.0",
+    "@react-native-community/cli": "^20.2.0",
+    "@types/react": "^19.2.3",
+    "typescript": "~6.0.3"
+  },
+  "private": true
+}
