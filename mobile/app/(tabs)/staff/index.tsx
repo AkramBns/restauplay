@@ -327,6 +327,8 @@ function PresenceModule() {
       if (uid) {
         const from = monthStart.toISOString().slice(0, 10);
         const to = monthEnd.toISOString().slice(0, 10);
+                  console.log('Fetching presences and vacations for user', uid, 'from', from, 'to', to) ;
+
         const [{ presences }, { vacations }] = await Promise.all([
           api.get<{ presences: Presence[] }>(`/presence?userId=${uid}&from=${from}&to=${to}`),
           api.get<{ vacations: Vacation[] }>(`/vacations?userId=${uid}&from=${from}&to=${to}`),
@@ -348,16 +350,30 @@ function PresenceModule() {
   async function setDayStatus(day: number, status: PresenceStatus) {
     if (!selectedUserId) return;
     const date = new Date(monthStart.getFullYear(), monthStart.getMonth(), day).toISOString().slice(0, 10);
+    // Optimistically update local state so repeated taps immediately cycle
+    setPresences((prev) => {
+      const foundIndex = prev.findIndex((p) => p.date.slice(0, 10) === date);
+      if (foundIndex >= 0) {
+        const copy = [...prev];
+        copy[foundIndex] = { ...copy[foundIndex], status };
+        return copy;
+      }
+      return [...prev, { id: `local-${date}`, userId: selectedUserId, date, status } as Presence];
+    });
+
     try {
       await api.post('/presence', { userId: selectedUserId, date, status });
       load();
     } catch (err) {
       setError(err instanceof ApiError ? err.message : t('staff.presence.saveFailedError'));
+      // revert to authoritative server state
+      load();
     }
   }
 
   function statusForDay(day: number): PresenceStatus | null {
-    const found = presences.find((p) => new Date(p.date).getDate() === day);
+    const date = new Date(monthStart.getFullYear(), monthStart.getMonth(), day).toISOString().slice(0, 10);
+    const found = presences.find((p) => p.date.slice(0, 10) === date);
     return found ? found.status : null;
   }
 

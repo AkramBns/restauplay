@@ -71,6 +71,7 @@ export default function ShoppingListScreen() {
 
   const [items, setItems] = useState<ShoppingItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [view, setView] = useState<ViewFilter>('today');
   const [statusFilter, setStatusFilter] = useState<ShoppingStatus | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<string | null>(null);
@@ -78,8 +79,12 @@ export default function ShoppingListScreen() {
   const [editingItem, setEditingItem] = useState<ShoppingItem | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
-    setLoading(true);
+  const load = useCallback(async (isRefresh = false) => {
+    if (isRefresh) {
+      setRefreshing(true);
+    } else {
+      setLoading(true);
+    }
     try {
       const params = new URLSearchParams({ view });
       if (statusFilter) params.set('status', statusFilter);
@@ -88,9 +93,10 @@ export default function ShoppingListScreen() {
     } catch (err) {
       setError(err instanceof ApiError ? err.message : t('shopping.loadFailedError'));
     } finally {
-      setLoading(false);
+      if (isRefresh) setRefreshing(false);
+      else setLoading(false);
     }
-  }, [view, statusFilter]);
+  }, [view, statusFilter, t]);
 
   useEffect(() => {
     load();
@@ -204,6 +210,8 @@ export default function ShoppingListScreen() {
           data={visibleItems}
           keyExtractor={(i) => i.id}
           contentContainerStyle={{ padding: 16 }}
+          refreshing={refreshing}
+          onRefresh={() => load(true)}
           ListEmptyComponent={<Text style={styles.empty}>{t('shopping.noItems')}</Text>}
           renderItem={({ item }) => (
             <View style={styles.itemCard}>

@@ -1,4 +1,5 @@
 const ROLES = ['staff', 'buyer', 'admin'];
+const DEBUG_REQUEST_LOGGING = process.env.DEBUG_REQUEST_LOGGING === 'true';
 
 const SHOPPING_STATUSES = ['pending', 'in_progress', 'completed', 'cancelled'];
 
@@ -18,6 +19,7 @@ function isAdmin(role) {
 
 module.exports = {
   ROLES,
+  DEBUG_REQUEST_LOGGING,
   SHOPPING_STATUSES,
   PRESENCE_STATUSES,
   VACATION_TYPES,

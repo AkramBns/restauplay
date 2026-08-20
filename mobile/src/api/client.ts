@@ -2,8 +2,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Point this at your backend. For a physical device/emulator, replace
 // 'localhost' with your machine's LAN IP (e.g. http://192.168.1.20:4000/api).
-export const API_BASE_URL = 'http://192.168.1.7:4000/api';
+//export const API_BASE_URL = 'http://192.168.1.7:4000/api';
 //export const API_BASE_URL = 'http://localhost:4000/api';
+export const API_BASE_URL = 'http://10.0.2.2:4000/api';
+//export const API_BASE_URL = 'http://192.168.1.2:4000/api';
+//export const API_BASE_URL = 'http://213.55.244.6:4000/api';
 
 const TOKEN_KEY = 'auth_token';
 
